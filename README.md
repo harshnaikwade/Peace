@@ -21,9 +21,11 @@ Welcome to Peace, a mental health counseling app designed to provide support and
 - **Machine Learning**: Random Forest algorithm is employed to analyze user responses and classify mental health issues, providing personalized insights and recommendations.
 
 ## Screenshots
-![image](https://github.com/harshnaikwade/Peace/assets/97459506/095e1338-7c26-4fca-bf76-37d669f3cbd7)
+![image](https://github.com/harshnaikwade/Peace/assets/97459506/5030e018-e770-499f-86ca-9a5130ed9f0a)
 
-![image](https://github.com/harshnaikwade/Peace/assets/97459506/3fc09e24-f0ab-4e31-8026-5c70ad76281f)
+
+![image](https://github.com/harshnaikwade/Peace/assets/97459506/f4b4b7d0-f151-4b28-a700-fae9209da3a6)
+
 
 ## Installation
 
