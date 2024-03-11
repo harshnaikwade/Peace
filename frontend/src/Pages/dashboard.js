@@ -59,9 +59,7 @@ const Dashboard = () => {
     if (setting === "Logout") {
       handleLogout();
     } else if (setting === "Profile") {
-      // setProfileOpen(true); // Open Profile dialog
-      console.log(type);
-      console.log(data);
+      setProfileOpen(true); // Open Profile dialog
       handleCloseUserMenu();
     } else {
       handleCloseUserMenu();

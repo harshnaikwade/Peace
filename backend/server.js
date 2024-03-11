@@ -59,7 +59,6 @@ const createTables = () => {
       medicalHistory TEXT,
       diagnosis VARCHAR(255),
       password VARCHAR(255) NOT NULL
-      
     )
   `;
   db.query(createUserTableQuery, (err) => {
@@ -132,25 +131,13 @@ const authenticate = async (tableName, email, password, res) => {
       }
     });
   } catch (error) {
-    // console.error("Authentication error:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// Routes
+//USER APIs
 app.get("/user", (req, res) => {
   const sql = "SELECT * FROM usernew";
-  db.query(sql, (err, result) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-    return res.json(result);
-  });
-});
-
-app.get("/counselor", (req, res) => {
-  const sql = "SELECT * FROM counselor";
   db.query(sql, (err, result) => {
     if (err) {
       console.error("Database error:", err);
@@ -163,7 +150,6 @@ app.get("/counselor", (req, res) => {
 app.post("/user", async (req, res) => {
   const sql =
     "INSERT INTO usernew (`firstName`, `lastName`, `gender`, `dob`,`email`, `medicalHistory`, `password`) VALUES (?, ?, ?, ?, ?, ?, ?);";
-
   const hashedPassword = await hashPassword(req.body.password);
   const values = [
     req.body.firstName,
@@ -174,7 +160,6 @@ app.post("/user", async (req, res) => {
     req.body.medicalHistory,
     hashedPassword,
   ];
-
   db.query(sql, values, (err, result) => {
     if (err) {
       console.error("Database error:", err);
@@ -184,10 +169,26 @@ app.post("/user", async (req, res) => {
   });
 });
 
+app.post("/userauth", async (req, res) => {
+  const { email, password } = req.body;
+  authenticate("usernew", email, password, res); // Your existing authentication logic
+});
+
+//COUNSELOR APIs
+app.get("/counselor", (req, res) => {
+  const sql = "SELECT * FROM counselor";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    return res.json(result);
+  });
+});
+
 app.post("/counselor", async (req, res) => {
   const sql =
     "INSERT INTO counselor (`firstName`, `lastName`, `email`, `areaofexperties`,`yearsofexperience`, `password`) VALUES (?, ?, ?, ?, ?, ?);";
-
   const hashedPassword = await hashPassword(req.body.password);
   const values = [
     req.body.firstName,
@@ -197,7 +198,6 @@ app.post("/counselor", async (req, res) => {
     req.body.yearsofexperience,
     hashedPassword,
   ];
-
   db.query(sql, values, (err, result) => {
     if (err) {
       console.error("Database error:", err);
@@ -207,37 +207,12 @@ app.post("/counselor", async (req, res) => {
   });
 });
 
-////////////////////////
-app.post("/userauth", async (req, res) => {
-  const { email, password } = req.body;
-  authenticate("usernew", email, password, res); // Your existing authentication logic
-});
-
 app.post("/counselorauth", (req, res) => {
   const { email, password } = req.body;
   authenticate("counselor", email, password, res);
 });
-////////////////////////
 
-//NOT WORKINGGGGGGG
-app.post("/updateUserData", (req, res) => {
-  const { id, firstName, lastName, email } = req.body;
-
-  const updateUserQuery = `
-    UPDATE usernew
-    SET firstName = ?, lastName = ?, email = ?
-    WHERE id = ?
-  `;
-
-  db.query(updateUserQuery, [firstName, lastName, email, id], (err, result) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-    return res.json({ message: "User data updated successfully" });
-  });
-});
-
+//Miscellaneous APIs
 app.post("/getCounselor", (req, res) => {
   const { email, diagnosis } = req.body;
   const sql = `UPDATE usernew SET diagnosis = ? WHERE email = ?`;
