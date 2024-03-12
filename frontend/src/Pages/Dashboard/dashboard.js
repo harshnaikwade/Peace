@@ -16,6 +16,9 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  CardMedia,
+  Card,
+  CardHeader,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import logoImage from "../../Components/Media/logo.png";
@@ -109,6 +112,21 @@ const Dashboard = () => {
         return <Typography>Therapy</Typography>;
       case "Know More":
         return <Typography>Know More</Typography>;
+      default:
+        return (
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0&showinfo=0"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; picture-in-picture"
+            allowfullscreen
+            style={{
+              borderRadius: "20px",
+              pointerEvents: "none",
+            }}
+          ></iframe>
+        );
     }
   };
 
