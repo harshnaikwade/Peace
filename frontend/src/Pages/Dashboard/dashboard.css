@@ -3,6 +3,12 @@
   background: #3098f4;
   border-radius: 16px;
   overflow: auto;
+  width: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+.navbar.collapsed {
+  width: 0;
 }
 
 .navbar-list {
@@ -14,7 +20,7 @@
   border-radius: 32px !important;
 }
 
-@media (min-width: 300px) {
+@media (max-width: 1023px) {
   .navbar {
     position: fixed;
     top: auto;
@@ -22,7 +28,13 @@
     left: 0;
     right: 0;
     z-index: 99;
+    transition: width 0.3s ease-in-out;
   }
+
+  .navbar.collapsed {
+    width: 0;
+  }
+
   .navbar-list {
     display: flex;
     flex-direction: row;
@@ -31,11 +43,15 @@
     padding: 10px;
   }
 }
-
 @media (min-width: 1024px) {
   .navbar {
     position: relative;
-    width: "15vw";
+    width: 15vw;
+    transition: width 0.3s ease-in-out;
+  }
+
+  .navbar.collapsed {
+    width: 0;
   }
 
   .navbar-list {

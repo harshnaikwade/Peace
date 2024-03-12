@@ -135,13 +135,11 @@ const Dashboard = () => {
       <Box style={{ display: "flex" }}>
         <Box
           id="navbar"
-          className="navbar"
+          className={`navbar ${isSidenavCollapsed ? "collapsed" : ""}`}
           style={{
-            width: isSidenavCollapsed ? "0vw" : "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            transition: "width 0.3s ease-in-out",
           }}
         >
           <Avatar
