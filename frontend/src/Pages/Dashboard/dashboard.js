@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Typography,
-  Container,
   Box,
   Avatar,
   List,
@@ -18,9 +17,11 @@ import {
   DialogTitle,
   DialogContent,
 } from "@mui/material";
-import logoImage from "../Components/Media/logo.png";
-import Survey from "../Components/Survey/survey";
-import Profile from "../Components/Common/Profile";
+import MenuIcon from "@mui/icons-material/Menu";
+import logoImage from "../../Components/Media/logo.png";
+import Survey from "../../Components/Survey/survey";
+import Profile from "../../Components/Common/Profile";
+import "./dashboard.css";
 
 const settings = ["Profile", "Logout"];
 
@@ -28,6 +29,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false); // State for Profile dialog
+  const [activeTab, setActiveTab] = useState("Home");
+  const [isSidenavCollapsed, setIsSidenavCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { data } = location.state || {};
@@ -70,46 +73,92 @@ const Dashboard = () => {
     setProfileOpen(false);
   };
 
+  const handleTabClick = (text) => {
+    setActiveTab(text);
+    console.log(`Navigate to ${text}`);
+  };
+
+  const toggleSidenav = () => {
+    setIsSidenavCollapsed(!isSidenavCollapsed);
+  };
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "Home":
+        return (
+          <>
+            {type === "User" ? (
+              diagnosis ? (
+                <Typography>{diagnosis}</Typography>
+              ) : (
+                <Box sx={{ height: "-webkit-fill-available" }}>
+                  <Survey />
+                </Box>
+              )
+            ) : (
+              type === "Counselor" && "Counselor"
+            )}
+            {type !== "User" && type !== "Counselor" && "Type not found"}
+          </>
+        );
+      case "About Us":
+        return <Typography>About Us</Typography>;
+      case "Contact Us":
+        return <Typography>Contact Us</Typography>;
+      case "Therapy":
+        return <Typography>Therapy</Typography>;
+      case "Know More":
+        return <Typography>Know More</Typography>;
+    }
+  };
+
   return (
     <Box style={{ display: "flex" }}>
-      <Container
-        id="sidenav"
-        style={{
-          backgroundColor: "#3098f4",
-          width: "15vw",
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          borderRadius: 16,
-          overflowY: "auto",
-        }}
-      >
-        <Avatar
-          alt="Avatar"
-          src={logoImage}
-          style={{ width: 128, height: 128, marginBottom: 10, marginTop: 10 }}
-        />
-        <List
+      <Box style={{ display: "flex" }}>
+        <Box
+          id="navbar"
+          className="navbar"
           style={{
-            width: "100%",
+            width: isSidenavCollapsed ? "0vw" : "100%",
             display: "flex",
             flexDirection: "column",
-            color: "white",
+            alignItems: "center",
+            transition: "width 0.3s ease-in-out",
           }}
         >
-          {["Home", "About Us", "Contact Us", "Therapy", "Know More"].map(
-            (text, index) => (
-              <ListItemButton
-                key={index}
-                onClick={() => console.log(`Navigate to ${text}`)}
-              >
-                <ListItemText primary={text} style={{ textAlign: "center" }} />
-              </ListItemButton>
-            )
-          )}
-        </List>
-      </Container>
+          <Avatar
+            alt="Avatar"
+            src={logoImage}
+            style={{
+              width: 128,
+              height: 128,
+            }}
+          />
+          <List className="navbar-list">
+            {["Home", "About Us", "Contact Us", "Therapy", "Know More"].map(
+              (text, index) => (
+                <ListItemButton
+                  key={index}
+                  onClick={() => handleTabClick(text)}
+                  className="navbar-link"
+                  sx={{
+                    backgroundColor:
+                      activeTab === text ? "#205d86" : "transparent",
+                    "&:hover": {
+                      backgroundColor: "#205d86",
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary={text}
+                    style={{ textAlign: "center" }}
+                  />
+                </ListItemButton>
+              )
+            )}
+          </List>
+        </Box>
+      </Box>
 
       <Box
         style={{
@@ -133,31 +182,37 @@ const Dashboard = () => {
             backgroundColor: "#d6eafd",
           }}
         >
-          <Typography
-            variant="h5"
-            sx={{
-              fontSize: "2.5rem",
-              fontWeight: "bold",
-              fontStyle: "italic",
-              letterSpacing: "1px",
-              color: "#05467f",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            Hi,
+          <Box sx={{ display: "flex" }}>
+            <IconButton onClick={toggleSidenav}>
+              {isSidenavCollapsed ? <MenuIcon /> : <MenuIcon />}
+            </IconButton>
             <Typography
-              variant={"inherit"}
+              variant="h5"
               sx={{
-                color: "#3098f4",
-                marginLeft: "0.5rem",
+                fontSize: "2.5rem",
+                fontWeight: "bold",
+                fontStyle: "italic",
+                letterSpacing: "1px",
+                color: "#05467f",
+                display: "flex",
+                alignItems: "center",
+                marginLeft: "10px",
               }}
             >
-              {loading ? <Skeleton variant="text" width={100} /> : firstName}
+              Hi,{" "}
+              <Typography
+                variant={"inherit"}
+                sx={{
+                  color: "#3098f4",
+                  marginLeft: "0.5rem",
+                }}
+              >
+                {loading ? <Skeleton variant="text" width={100} /> : firstName}
+              </Typography>
             </Typography>
-          </Typography>
+          </Box>
 
-          <Box>
+          <>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt={firstName} src="/static/images/avatar/2.jpg" />
@@ -188,10 +243,10 @@ const Dashboard = () => {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </>
         </AppBar>
 
-        <div
+        <Box
           id="quote"
           style={{
             position: "relative",
@@ -212,9 +267,9 @@ const Dashboard = () => {
           >
             Hope you're having a good day!
           </Typography>
-        </div>
+        </Box>
 
-        <div
+        <Box
           id="main"
           style={{
             position: "relative",
@@ -227,21 +282,12 @@ const Dashboard = () => {
               borderRadius: "20px",
               overflowY: "auto",
               color: "#05467f",
-              height: "76.5vh",
+              height: "77vh",
             }}
           >
-            {type === "User" ? (
-              diagnosis ? (
-                <Typography>{diagnosis}</Typography>
-              ) : (
-                <Survey />
-              )
-            ) : (
-              type === "Counselor" && "Counselor"
-            )}
-            {type !== "User" && type !== "Counselor" && "Type not found"}
+            {renderTabContent()}
           </Box>
-        </div>
+        </Box>
       </Box>
 
       {/* Profile Dialog */}

@@ -138,165 +138,163 @@ const Survey = () => {
   };
 
   return (
-    <>
-      <Card
+    <Card
+      sx={{
+        // width: "30%",
+        height: "-webkit-fill-available",
+        padding: 3,
+        justifyContent: "center",
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: "20px",
+      }}
+    >
+      <Typography
+        variant="body2"
         sx={{
-          // width: "30%",
-          height: "-webkit-fill-available",
-          padding: 3,
-          justifyContent: "center",
-          alignItems: "center",
-          display: "flex",
-          flexDirection: "column",
-          borderRadius: "20px",
+          fontSize: "1.5rem",
+          color: "#05467f",
+          fontWeight: "200",
+          fontStyle: "italic",
+          letterSpacing: "1px",
         }}
       >
-        <Typography
-          variant="body2"
-          sx={{
-            fontSize: "1.5rem",
-            color: "#05467f",
-            fontWeight: "200",
-            fontStyle: "italic",
-            letterSpacing: "1px",
-          }}
-        >
-          Hey, Let's begin to know you better...
-        </Typography>
+        Hey, Let's begin to know you better...
+      </Typography>
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleOpen}
-          style={{ marginTop: "20px" }}
-        >
-          Take Survey
-        </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleOpen}
+        style={{ marginTop: "20px" }}
+      >
+        Take Survey
+      </Button>
 
-        <Dialog open={open} onClose={handleClose}>
-          <DialogContent>
-            <div style={{ position: "relative", paddingBottom: 10 }}>
-              <Button style={{ position: "absolute" }} onClick={handleClose}>
-                X
-              </Button>
-              <Typography
-                variant="h5"
-                align="center"
-                gutterBottom
-                style={{
-                  color: "#2196F3",
-                  fontFamily: "Arial, sans-serif",
-                  fontWeight: "bold",
-                }}
-              >
-                Let's Get Started
-              </Typography>
-            </div>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogContent>
+          <div style={{ position: "relative", paddingBottom: 10 }}>
+            <Button style={{ position: "absolute" }} onClick={handleClose}>
+              X
+            </Button>
+            <Typography
+              variant="h5"
+              align="center"
+              gutterBottom
+              style={{
+                color: "#2196F3",
+                fontFamily: "Arial, sans-serif",
+                fontWeight: "bold",
+              }}
+            >
+              Let's Get Started
+            </Typography>
+          </div>
 
-            {showWarning && (
-              <Alert severity="error" style={{ marginBottom: "20px" }}>
-                Please answer all questions before proceeding.
-              </Alert>
-            )}
+          {showWarning && (
+            <Alert severity="error" style={{ marginBottom: "20px" }}>
+              Please answer all questions before proceeding.
+            </Alert>
+          )}
 
-            <form onSubmit={(e) => e.preventDefault()}>
-              <Grid container spacing={2}>
-                {sectionQuestions.map((question, index) => (
-                  <Grid item xs={12} key={index}>
-                    <Typography variant="body1" gutterBottom>
-                      <span style={{ marginRight: "10px" }}>{`Q${
-                        index +
-                        1 +
-                        questionsPerSection
-                          .slice(0, section - 1)
-                          .reduce((acc, num) => acc + num, 0)
-                      }:`}</span>{" "}
-                      {question}
+          <form onSubmit={(e) => e.preventDefault()}>
+            <Grid container spacing={2}>
+              {sectionQuestions.map((question, index) => (
+                <Grid item xs={12} key={index}>
+                  <Typography variant="body1" gutterBottom>
+                    <span style={{ marginRight: "10px" }}>{`Q${
+                      index +
+                      1 +
+                      questionsPerSection
+                        .slice(0, section - 1)
+                        .reduce((acc, num) => acc + num, 0)
+                    }:`}</span>{" "}
+                    {question}
+                  </Typography>
+                  <FormControl component="fieldset" style={{ width: "100%" }}>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Not at all (0) &nbsp;&nbsp; Seldom (1) &nbsp;&nbsp;
+                      Sometimes (2) &nbsp;&nbsp; Often (3) &nbsp;&nbsp; All the
+                      time (4)
                     </Typography>
-                    <FormControl component="fieldset" style={{ width: "100%" }}>
-                      <Typography variant="subtitle2" gutterBottom>
-                        Not at all (0) &nbsp;&nbsp; Seldom (1) &nbsp;&nbsp;
-                        Sometimes (2) &nbsp;&nbsp; Often (3) &nbsp;&nbsp; All
-                        the time (4)
-                      </Typography>
-                      <RadioGroup
-                        row
-                        value={
-                          answers[
-                            index +
-                              questionsPerSection
-                                .slice(0, section - 1)
-                                .reduce((acc, num) => acc + num, 0)
-                          ]
-                        }
-                        onChange={(e) =>
-                          handleRadioChange(
-                            index +
-                              questionsPerSection
-                                .slice(0, section - 1)
-                                .reduce((acc, num) => acc + num, 0),
-                            e.target.value
-                          )
-                        }
-                      >
-                        {[0, 1, 2, 3, 4].map((value) => (
-                          <FormControlLabel
-                            key={value}
-                            value={value.toString()}
-                            control={<Radio />}
-                            label={value.toString()}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-                ))}
-              </Grid>
-            </form>
-            {/* {answeredQuestions > 0 && ( */}
-            <LinearProgress
-              variant="determinate"
-              value={progress}
-              sx={{ marginTop: "20px" }}
-            />
-            {/* )} */}
-          </DialogContent>
-          <DialogActions>
-            <>
+                    <RadioGroup
+                      row
+                      value={
+                        answers[
+                          index +
+                            questionsPerSection
+                              .slice(0, section - 1)
+                              .reduce((acc, num) => acc + num, 0)
+                        ]
+                      }
+                      onChange={(e) =>
+                        handleRadioChange(
+                          index +
+                            questionsPerSection
+                              .slice(0, section - 1)
+                              .reduce((acc, num) => acc + num, 0),
+                          e.target.value
+                        )
+                      }
+                    >
+                      {[0, 1, 2, 3, 4].map((value) => (
+                        <FormControlLabel
+                          key={value}
+                          value={value.toString()}
+                          control={<Radio />}
+                          label={value.toString()}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+              ))}
+            </Grid>
+          </form>
+          {/* {answeredQuestions > 0 && ( */}
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{ marginTop: "20px" }}
+          />
+          {/* )} */}
+        </DialogContent>
+        <DialogActions>
+          <>
+            <Button
+              type="button"
+              variant="contained"
+              color="primary"
+              onClick={handleBack}
+              disabled={section === 1}
+            >
+              Back
+            </Button>
+
+            {section < questionsPerSection.length ? (
               <Button
                 type="button"
                 variant="contained"
                 color="primary"
-                onClick={handleBack}
-                disabled={section === 1}
+                onClick={handleNext}
               >
-                Back
+                Next
               </Button>
-
-              {section < questionsPerSection.length ? (
-                <Button
-                  type="button"
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext}
-                >
-                  Next
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </Button>
-              )}
-            </>
-          </DialogActions>
-        </Dialog>
-      </Card>
-    </>
+            ) : (
+              <Button
+                type="button"
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            )}
+          </>
+        </DialogActions>
+      </Dialog>
+    </Card>
   );
 };
 

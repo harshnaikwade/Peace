@@ -15,7 +15,7 @@ import CounselorLogin from "./Pages/Logins/Counselor/CounselorLogin";
 import CounselorSignUp from "./Pages/Logins/Counselor/CounselorForm";
 
 //Pages
-import Dashboard from "./Pages/dashboard";
+import Dashboard from "./Pages/Dashboard/dashboard";
 import Temp from "./Pages/temp";
 import Survey from "./Components/Survey/survey";
 import Error404 from "./Pages/Error404";

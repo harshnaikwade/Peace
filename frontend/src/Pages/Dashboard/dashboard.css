@@ -1,0 +1,47 @@
+.navbar {
+  position: absolute;
+  background: #3098f4;
+  border-radius: 16px;
+  overflow: auto;
+}
+
+.navbar-list {
+  color: white;
+  padding: 0 10px;
+}
+
+.navbar-link {
+  border-radius: 32px !important;
+}
+
+@media (min-width: 300px) {
+  .navbar {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+  }
+  .navbar-list {
+    display: flex;
+    flex-direction: row;
+    gap: 1vw;
+    margin: 10px;
+    padding: 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar {
+    position: relative;
+    width: "15vw";
+  }
+
+  .navbar-list {
+    display: flex;
+    flex-direction: column;
+    /* gap: 0; */
+    /* padding: 0 20px; */
+  }
+}
