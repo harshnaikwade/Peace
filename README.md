@@ -24,7 +24,7 @@ Welcome to Peace, a mental health counseling app designed to provide support and
 ![image](https://github.com/harshnaikwade/Peace/assets/97459506/5030e018-e770-499f-86ca-9a5130ed9f0a)
 
 
-![image](https://github.com/harshnaikwade/Peace/assets/97459506/f4b4b7d0-f151-4b28-a700-fae9209da3a6)
+![image](https://github.com/harshnaikwade/Peace/assets/97459506/9da0803d-85ac-42d8-ab58-f81c12ac2e2a)
 
 
 ## Installation
