@@ -31,7 +31,7 @@ const questions = [
 
 const questionsPerSection = [3, 3, 4];
 
-const Survey = () => {
+const Survey = ({ onSurveyResponse }) => {
   const [answers, setAnswers] = useState(Array(questions.length).fill(null));
   const [section, setSection] = useState(1);
   const [showWarning, setShowWarning] = useState(false);
@@ -66,43 +66,31 @@ const Survey = () => {
     setSection((prevSection) => prevSection - 1);
   };
 
-  const handleSendArray = async (answerr) => {
+  const sendSurveyAnswers = async (answers) => {
     try {
-      const apiUrl = "https://0aed-34-23-234-100.ngrok-free.app/receive-array"; // Update with your ngrok URL
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ array: answerr }),
-        mode: "cors",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to send array");
-      }
-      const data = await response.json();
-      console.log("Diagnosis:", data.arrayString);
+      const apiUrl = "https://7b5a-34-75-100-154.ngrok-free.app/receive-array"; // Update with your backend URL
+      const response = await axios.post(apiUrl, { array: answers });
+      console.log("Diagnosis:", response.data.arrayString);
 
       // Send email and diagnosis to the backend
-      try {
-        const email = localStorage.getItem("email"); // Assuming email is stored in localStorage
-        const diagnosis = data.arrayString;
-        const response = await axios.post(
-          "http://localhost:5000/getCounselor",
-          {
-            email: email,
-            diagnosis: diagnosis,
-          }
-        );
-        console.log("Response from getCounselor:", response.data);
-      } catch (error) {
-        console.error("Error sending diagnosis to getCounselor:", error);
-      }
+      const email = localStorage.getItem("email"); // Assuming email is stored in localStorage
+      const diagnosis = response.data.arrayString;
+      const counselorResponse = await axios.post(
+        "http://localhost:5000/getCounselor",
+        {
+          email: email,
+          diagnosis: diagnosis,
+        }
+      );
+      console.log("Response from getCounselor:", counselorResponse.data);
+      onSurveyResponse(counselorResponse.data);
 
-      alert("You are suffering through: " + data.arrayString);
+      alert("You are suffering through: " + response.data.arrayString);
     } catch (error) {
       console.error("Error sending array:", error.message);
+      alert(
+        "An error occurred while submitting your survey. Please try again."
+      );
     }
   };
 
@@ -111,7 +99,7 @@ const Survey = () => {
 
     if (allQuestionsAnswered) {
       console.log("User answers:", answers);
-      await handleSendArray(answers);
+      await sendSurveyAnswers(answers);
       handleClose();
     } else {
       setShowWarning(true);

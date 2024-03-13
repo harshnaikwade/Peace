@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Typography,
@@ -16,9 +16,10 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  CardMedia,
   Card,
-  CardHeader,
+  CardContent,
+  CardActions,
+  Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import logoImage from "../../Components/Media/logo.png";
@@ -31,7 +32,7 @@ const settings = ["Profile", "Logout"];
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [profileOpen, setProfileOpen] = useState(false); // State for Profile dialog
+  const [profileOpen, setProfileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Home");
   const [isSidenavCollapsed, setIsSidenavCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -39,7 +40,14 @@ const Dashboard = () => {
   const { data } = location.state || {};
   const { type } = location.state || {};
   const firstName = data?.firstName;
-  const diagnosis = data?.diagnosis;
+  // const diagnosis = data?.diagnosis;
+  const [showSurvey, setShowSurvey] = useState(true);
+  const [surveyResponse, setSurveyResponse] = useState(null);
+
+  const handleSurveyResponse = useCallback((response) => {
+    setSurveyResponse(response);
+    setShowSurvey(false);
+  }, []);
 
   useEffect(() => {
     // Simulate API call to fetch user data
@@ -65,7 +73,7 @@ const Dashboard = () => {
     if (setting === "Logout") {
       handleLogout();
     } else if (setting === "Profile") {
-      setProfileOpen(true); // Open Profile dialog
+      setProfileOpen(true);
       handleCloseUserMenu();
     } else {
       handleCloseUserMenu();
@@ -91,13 +99,65 @@ const Dashboard = () => {
         return (
           <>
             {type === "User" ? (
-              diagnosis ? (
-                <Typography>{diagnosis}</Typography>
-              ) : (
-                <Box sx={{ height: "-webkit-fill-available" }}>
-                  <Survey />
-                </Box>
-              )
+              <>
+                {showSurvey && (
+                  <Survey onSurveyResponse={handleSurveyResponse} />
+                )}
+                {!showSurvey && surveyResponse && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "20px",
+                    }}
+                  >
+                    {surveyResponse.map((user, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          width: { xs: "100%", sm: "45%", md: "20vw" },
+                          marginBottom: "20px",
+                        }}
+                      >
+                        <Card
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: "16px",
+                          }}
+                        >
+                          <CardContent>
+                            <Typography variant="body1">
+                              {user.firstName} {user.lastName}
+                            </Typography>
+                            <Typography variant="body1">
+                              Area of Expertise: {user.areaofexperties}
+                            </Typography>
+                            <Typography variant="body1">
+                              Years of Experience: {user.yearsofexperience}
+                            </Typography>
+                          </CardContent>
+                          <CardActions>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() =>
+                                console.log(
+                                  `Request to ${user.firstName} ${user.lastName}`
+                                )
+                              }
+                            >
+                              Send Request
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </>
             ) : (
               type === "Counselor" && "Counselor"
             )}
@@ -117,6 +177,7 @@ const Dashboard = () => {
           <iframe
             width="100%"
             height="100%"
+            title="error"
             src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0&showinfo=0"
             frameborder="0"
             allow="accelerometer; autoplay; encrypted-media; picture-in-picture"
