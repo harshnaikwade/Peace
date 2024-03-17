@@ -20,8 +20,12 @@ import {
   CardContent,
   CardActions,
   Button,
+  CardActionArea,
+  Collapse,
+  Icon,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import InfoIcon from "@mui/icons-material/Info";
 import logoImage from "../../Components/Media/logo.png";
 import Survey from "../../Components/Survey/survey";
 import Profile from "../../Components/Common/Profile";
@@ -43,6 +47,7 @@ const Dashboard = () => {
   // const diagnosis = data?.diagnosis;
   const [showSurvey, setShowSurvey] = useState(true);
   const [surveyResponse, setSurveyResponse] = useState(null);
+  const [expanded, setExpanded] = useState({});
 
   const handleSurveyResponse = useCallback((response) => {
     setSurveyResponse(response);
@@ -93,6 +98,13 @@ const Dashboard = () => {
     setIsSidenavCollapsed(!isSidenavCollapsed);
   };
 
+  const handleExpandClick = (index) => {
+    setExpanded((prevExpanded) => ({
+      ...prevExpanded,
+      [index]: !prevExpanded[index],
+    }));
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "Home":
@@ -128,29 +140,53 @@ const Dashboard = () => {
                             borderRadius: "16px",
                           }}
                         >
-                          <CardContent>
-                            <Typography variant="body1">
-                              {user.firstName} {user.lastName}
-                            </Typography>
-                            <Typography variant="body1">
-                              Area of Expertise: {user.areaofexperties}
-                            </Typography>
-                            <Typography variant="body1">
-                              Years of Experience: {user.yearsofexperience}
-                            </Typography>
-                          </CardContent>
-                          <CardActions>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={() =>
-                                console.log(
-                                  `Request to ${user.firstName} ${user.lastName}`
-                                )
-                              }
+                          <CardActionArea
+                            onClick={() => handleExpandClick(index)}
+                          >
+                            <Icon
+                              sx={{ position: "absolute", top: 10, right: 10 }}
                             >
-                              Send Request
-                            </Button>
+                              <InfoIcon />
+                            </Icon>
+                            <CardContent>
+                              <Typography variant="body1">
+                                {user.firstName} {user.lastName}
+                              </Typography>
+                              <Typography variant="body1">
+                                Area of Expertise: {user.areaofexpertise}
+                              </Typography>
+                              <Typography variant="body1">
+                                Years of Experience: {user.yearsofexperience}
+                              </Typography>
+                            </CardContent>
+                          </CardActionArea>
+
+                          <Collapse
+                            in={expanded[index] || false}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            <CardContent>
+                              {/* Detailed information about the counselor goes here */}
+                              <Typography paragraph>
+                                Detailed information about the counselor...
+                              </Typography>
+                            </CardContent>
+                          </Collapse>
+                          <CardActions>
+                            {expanded[index] && (
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() =>
+                                  console.log(
+                                    `Request to ${user.firstName} ${user.lastName}`
+                                  )
+                                }
+                              >
+                                Send Request
+                              </Button>
+                            )}
                           </CardActions>
                         </Card>
                       </Box>

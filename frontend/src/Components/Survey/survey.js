@@ -68,7 +68,7 @@ const Survey = ({ onSurveyResponse }) => {
 
   const sendSurveyAnswers = async (answers) => {
     try {
-      const apiUrl = "https://7b5a-34-75-100-154.ngrok-free.app/receive-array"; // Update with your backend URL
+      const apiUrl = "https://aa53-34-16-153-116.ngrok-free.app/receive-array"; // Update with your backend URL
       const response = await axios.post(apiUrl, { array: answers });
       console.log("Diagnosis:", response.data.arrayString);
 
