@@ -76,7 +76,7 @@ const createTables = () => {
       firstName VARCHAR(255) NOT NULL,
       lastName VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL UNIQUE,
-      areaofexperties VARCHAR(255) NOT NULL,
+      areaofexpertise VARCHAR(255) NOT NULL,
       yearsofexperience INT NOT NULL,
       password VARCHAR(255) NOT NULL
     )
@@ -188,13 +188,13 @@ app.get("/counselor", (req, res) => {
 
 app.post("/counselor", async (req, res) => {
   const sql =
-    "INSERT INTO counselor (`firstName`, `lastName`, `email`, `areaofexperties`,`yearsofexperience`, `password`) VALUES (?, ?, ?, ?, ?, ?);";
+    "INSERT INTO counselor (`firstName`, `lastName`, `email`, `areaofexpertise`,`yearsofexperience`, `password`) VALUES (?, ?, ?, ?, ?, ?);";
   const hashedPassword = await hashPassword(req.body.password);
   const values = [
     req.body.firstName,
     req.body.lastName,
     req.body.email,
-    req.body.areaofexperties,
+    req.body.areaofexpertise,
     req.body.yearsofexperience,
     hashedPassword,
   ];
@@ -223,7 +223,7 @@ app.post("/getCounselor", (req, res) => {
       return;
     }
     console.log("Diagnosis stored successfully");
-    const sql2 = `SELECT * FROM counselor WHERE areaofexperties = ?`;
+    const sql2 = `SELECT * FROM counselor WHERE areaofexpertise = ?`;
     db.query(sql2, [diagnosis], (err, result) => {
       if (err) {
         console.error("Error fetching users:", err);
