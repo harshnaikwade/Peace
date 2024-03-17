@@ -18,7 +18,7 @@ const CounselorForm = () => {
     firstName: "",
     lastName: "",
     email: "",
-    areaofexperties: "",
+    areaofexpertise: "",
     yearsofexperience: "",
     password: "",
   });
@@ -134,8 +134,8 @@ const CounselorForm = () => {
                 fullWidth
                 type="text"
                 variant="outlined"
-                value={values.areaofexperties}
-                onChange={handleChange("areaofexperties")}
+                value={values.areaofexpertise}
+                onChange={handleChange("areaofexpertise")}
                 sx={{ background: "white" }}
               />
             </Grid>
