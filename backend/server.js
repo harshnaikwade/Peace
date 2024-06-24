@@ -6,6 +6,7 @@ import bcrypt from "bcrypt"; // For password hashing
 const app = express();
 app.use(cors());
 app.use(express.json());
+var curreNtUseremail;
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -22,6 +23,8 @@ db.connect((err) => {
     createDatabaseAndTables();
   }
 });
+
+var currentCounselor = "";
 
 // Function to create database and tables
 const createDatabaseAndTables = () => {
@@ -88,6 +91,27 @@ const createTables = () => {
       console.log("Table 'counselor' created or already exists");
     }
   });
+
+  // Create usernew table
+  const createRequestTableQuery = `
+CREATE TABLE IF NOT EXISTS request (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  useremail VARCHAR(255) NOT NULL,
+  userfirstname VARCHAR(255) NOT NULL,
+  userlastname VARCHAR(255) NOT NULL,
+  usercondition VARCHAR(255),
+  counseloremail VARCHAR(255) NOT NULL,
+  approvalstatus VARCHAR(10)
+)
+`;
+
+  db.query(createRequestTableQuery, (err) => {
+    if (err) {
+      console.error("Error creating request table:", err);
+    } else {
+      console.log("Table 'request' created or already exists");
+    }
+  });
 };
 
 // Helper function for hashing passwords
@@ -147,7 +171,41 @@ app.get("/user", (req, res) => {
   });
 });
 
+// --------------------------- User Request ------------------------------
+
+app.get("/userrequest", (req, res) => {
+  const sql = "SELECT * FROM request WHERE counseloremail = ?";
+  db.query(sql, [currentCounselor], (err, result) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    return res.json(result);
+  });
+});
+
+app.post("/sendrequest", async (req, res) => {
+  currentCounselor = req.body.counselorEmail;
+  const sql =
+    "INSERT INTO request (`useremail`, `userfirstname`, `userlastname`, `usercondition`, `counseloremail`) VALUES (?, ?, ?, ?, ?);";
+  const values = [
+    req.body.userEmail,
+    req.body.userFirstName,
+    req.body.userLastName,
+    req.body.userCondition,
+    req.body.counselorEmail,
+  ];
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    return res.json({ message: "User created successfully" });
+  });
+});
+
 app.post("/user", async (req, res) => {
+  curretUseremail = req.body.email;
   const sql =
     "INSERT INTO usernew (`firstName`, `lastName`, `gender`, `dob`,`email`, `medicalHistory`, `password`) VALUES (?, ?, ?, ?, ?, ?, ?);";
   const hashedPassword = await hashPassword(req.body.password);

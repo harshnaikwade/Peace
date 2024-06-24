@@ -52,6 +52,9 @@ const UserLogin = () => {
         localStorage.setItem("email", values.email);
         const type = "User";
         const userData = response.data.userData;
+        localStorage.setItem("firstname", userData.firstName);
+        localStorage.setItem("lastname", userData.lastName);
+        
         // console.log(userData);
         navigate("/dashboard", { state: { data: userData, type } });
       } else {

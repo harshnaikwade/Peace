@@ -68,13 +68,14 @@ const Survey = ({ onSurveyResponse }) => {
 
   const sendSurveyAnswers = async (answers) => {
     try {
-      const apiUrl = "https://aa53-34-16-153-116.ngrok-free.app/receive-array"; // Update with your backend URL
+      const apiUrl = "https://4038-35-190-181-50.ngrok-free.app/receive-array"; // Update with your backend URL
       const response = await axios.post(apiUrl, { array: answers });
       console.log("Diagnosis:", response.data.arrayString);
 
       // Send email and diagnosis to the backend
       const email = localStorage.getItem("email"); // Assuming email is stored in localStorage
       const diagnosis = response.data.arrayString;
+      localStorage.setItem("usercondition", diagnosis);
       const counselorResponse = await axios.post(
         "http://localhost:5000/getCounselor",
         {

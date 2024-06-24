@@ -30,8 +30,10 @@ import logoImage from "../../Components/Media/logo.png";
 import Survey from "../../Components/Survey/survey";
 import Profile from "../../Components/Common/Profile";
 import "./dashboard.css";
+import axios from "axios";
 
 const settings = ["Profile", "Logout"];
+
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -48,6 +50,8 @@ const Dashboard = () => {
   const [showSurvey, setShowSurvey] = useState(true);
   const [surveyResponse, setSurveyResponse] = useState(null);
   const [expanded, setExpanded] = useState({});
+
+  const [selectedCounselor, setSelectedCounselor] = useState(null) ;
 
   const handleSurveyResponse = useCallback((response) => {
     setSurveyResponse(response);
@@ -104,6 +108,25 @@ const Dashboard = () => {
       [index]: !prevExpanded[index],
     }));
   };
+
+  const handleSendRequest = async (counselor) => {
+    try {
+      const response = await axios.post('http://localhost:5000/sendrequest', {
+        counselorEmail : counselor.email,
+        userEmail : localStorage.getItem("email"),
+        userFirstName : localStorage.getItem("firstname"),
+        userLastName : localStorage.getItem("lastname"),
+        userCondition : localStorage.getItem("usercondition"),
+      });
+      
+      console.log('Request ------------------- successful:', response.data);
+      console.log("helloooo",counselor);
+    } catch (error) {
+      console.log(localStorage.getItem("usercondition"));
+      console.error('Error:', error.message);
+    }
+  };
+
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -178,11 +201,7 @@ const Dashboard = () => {
                               <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={() =>
-                                  console.log(
-                                    `Request to ${user.firstName} ${user.lastName}`
-                                  )
-                                }
+                                onClick={()=>handleSendRequest(user)}
                               >
                                 Send Request
                               </Button>
